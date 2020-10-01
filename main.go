@@ -50,7 +50,7 @@ func main() {
 	flag.Parse()
 
 	createDirIfNotExist(databasePath)
-  
+
 	db, err := storm.Open(databasePath + "/locations.db")
 	if err != nil {
 		log.Fatal(err)
@@ -96,9 +96,9 @@ func listen(db *storm.DB) {
 		}
 
 		w.Write(responseData)
-	})
+	}))
 
-	http.HandleFunc("/retrieve/multi", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/retrieve/multi", basicAuth(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Server", serverIdentifier)
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(200)
@@ -181,7 +181,7 @@ func createDirIfNotExist(dir string) {
 	}
 }
 
-func basicAuth( handler http.HandlerFunc) http.HandlerFunc{
+func basicAuth(handler http.HandlerFunc) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 
@@ -200,6 +200,7 @@ func basicAuth( handler http.HandlerFunc) http.HandlerFunc{
 			return
 		}
 	}
+
 }
 
 func validate(username, password string) bool {
